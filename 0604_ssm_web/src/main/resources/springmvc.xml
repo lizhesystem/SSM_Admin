@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/c"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			    http://www.springframework.org/schema/beans/spring-beans.xsd
+			    http://www.springframework.org/schema/context
+			    http://www.springframework.org/schema/context/spring-context.xsd
+			    http://www.springframework.org/schema/mvc
+			    http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--配置aop容器扫描的包路径-->
+    <context:component-scan base-package="com.ylsoft.ssm.controller"/>
+
+    <!--配置处理器映射器,开启对SpringMVC注解的支持-->
+    <mvc:annotation-driven/>
+
+    <!--配置视图解析去，这里指定jsp所在的目录-->
+    <bean id="internalResource" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--释放静态资源-->
+    <mvc:default-servlet-handler/>
+
+    <!-- 或者使用这种方式-设置静态资源不过滤 -->
+    <!--<mvc:resources location="/css/" mapping="/css/**" />-->
+    <!--<mvc:resources location="/img/" mapping="/img/**" />-->
+    <!--<mvc:resources location="/js/" mapping="/js/**" />-->
+    <!--<mvc:resources location="/plugins/" mapping="/plugins/**" />-->
+
+    <!--
+    开启springmvc对aop的支持，如果不配置这个，那么在Controller里使用注解的拦截方式就不生效，只能去service里写。
+    开启这个aop的支持，那么就可以在控制器controller里写 jsr250、 secured这些的权限控制了。。。
+    支持AOP的注解支持，AOP底层使用代理技术
+    JDK动态代理，要求必须有接口
+    cglib代理，生成子类对象，proxy-target-class="true" 默认使用cglib的方式
+-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+</beans>

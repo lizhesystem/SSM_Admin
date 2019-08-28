@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ylsoft.ssm.dao.OrdersDao">
+    <resultMap id="OrdersMap" type="Orders">
+        <id column="id" property="id"/>
+        <result column="orderNum" property="orderNum"/>
+        <result column="orderTime" property="orderTime"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="peopleCount" property="peopleCount"/>
+        <result column="payType" property="payType"/>
+        <result column="orderDesc" property="orderDesc"/>
+        <!--表中的product对象，一对一的操作，Orders里放Product对象-->
+        <association property="product" javaType="Product">
+            <result property="productName" column="productName"/>
+            <result property="productPrice" column="productPrice"/>
+        </association>
+    </resultMap>
+
+
+    <resultMap id="findByidMap" type="Orders">
+        <id column="id" property="id"/>
+        <result column="orderNum" property="orderNum"/>
+        <result column="orderTime" property="orderTime"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="peopleCount" property="peopleCount"/>
+        <result column="payType" property="payType"/>
+        <result column="orderDesc" property="orderDesc"/>
+        <!--表中的product对象，一对一的操作，Orders里放Product对象-->
+        <association property="product" javaType="Product">
+            <result property="productName" column="productName"/>
+            <result property="productPrice" column="productPrice"/>
+        </association>
+        <association property="member" javaType="Member">
+            <result property="name" column="name"/>
+            <result property="nickname" column="nickname"/>
+            <result property="phoneNum" column="phoneNum"/>
+            <result property="email" column="email"/>
+        </association>
+        <collection property="travellers" ofType="Traveller">
+            <result property="name" column="tname"/>
+            <result property="sex" column="sex"/>
+            <result property="phoneNum" column="tphoneNum"/>
+            <result property="credentialsType" column="credentialsType"/>
+            <result property="credentialsNum" column="credentialsNum"/>
+        </collection>
+    </resultMap>
+
+    <select id="findall" resultMap="OrdersMap">
+        select t1.*,t2.productName,t2.productPrice from orders t1, PRODUCT t2 where t1.productId = t2.id
+    </select>
+
+    <select id="findByid" resultMap="findByidMap">
+        select t1.*,t4.productName,t4.productPrice,t3.name,t3.nickname,t3.phonenum,t3.email,t2.name as tname, t2.sex,t2.phoneNum as tphoneNum,t2.credentialsType,t2.credentialsNum from ORDER_TRAVELLER t,orders t1 ,TRAVELLER t2,member t3,product t4
+          where t.orderid = #{id}
+           and t1.id = t.orderid
+           and t1.productId = t4.id
+           and t1.memberid = t3.id
+           and t.orderid = t1.id
+    </select>
+</mapper>
